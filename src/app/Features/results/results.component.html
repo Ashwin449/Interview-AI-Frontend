@@ -1,0 +1,33 @@
+<main class="main">
+  <header class="masthead">
+    <div>
+      <h1>Results</h1>
+      <p>A record of every practice interview, with what to work on next.</p>
+    </div>
+  </header>
+
+  <section class="results-list">
+    <article class="result-card" *ngFor="let result of results">
+      <div class="result-card__header">
+        <h2>{{ result.title }}</h2>
+        <span class="result-card__score">{{ result.score }}%</span>
+      </div>
+      <p class="result-card__date">{{ result.date }}</p>
+
+      <div class="result-card__body">
+        <div class="result-card__column">
+          <p class="result-card__label">Went well</p>
+          <ul>
+            <li *ngFor="let item of result.strengths">{{ item }}</li>
+          </ul>
+        </div>
+        <div class="result-card__column">
+          <p class="result-card__label">Focus on next time</p>
+          <ul>
+            <li *ngFor="let item of result.improve">{{ item }}</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+  </section>
+</main>

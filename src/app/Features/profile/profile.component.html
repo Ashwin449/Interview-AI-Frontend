@@ -1,0 +1,24 @@
+<main class="main">
+  <header class="masthead">
+    <div>
+      <h1>Profile</h1>
+      <p>How you show up across IntervueAI.</p>
+    </div>
+  </header>
+
+  <section class="profile-card">
+    <div class="profile-card__avatar">{{ userName.charAt(0) }}</div>
+
+    <dl class="profile-fields">
+      <div class="profile-fields__row" *ngFor="let field of fields">
+        <dt>{{ field.label }}</dt>
+        <dd>{{ field.value }}</dd>
+      </div>
+    </dl>
+
+    <div class="profile-card__actions">
+      <button class="btn btn--primary" type="button" (click)="onEditProfile()">Edit profile</button>
+      <button class="text-button" type="button" (click)="onSignOut()">Sign out</button>
+    </div>
+  </section>
+</main>

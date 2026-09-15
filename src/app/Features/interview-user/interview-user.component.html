@@ -1,0 +1,136 @@
+<div class="interview-shell">
+  <header class="top-header">
+    <div class="brand">
+      <div class="brand__icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <rect x="4" y="7" width="16" height="12" rx="4" fill="currentColor" opacity="0.2" />
+          <rect x="4" y="7" width="16" height="12" rx="4" stroke="currentColor" stroke-width="1.6" />
+          <circle cx="9" cy="13" r="1.4" fill="currentColor" />
+          <circle cx="15" cy="13" r="1.4" fill="currentColor" />
+          <path d="M12 7V4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          <circle cx="12" cy="3.2" r="1" fill="currentColor" />
+        </svg>
+      </div>
+      <span class="brand__name">IntervueAI</span>
+    </div>
+
+    <button class="exit-button" type="button" (click)="onExitInterview()">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M9 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M14 15l4-3-4-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M18 12H9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+      </svg>
+      Exit Interview
+    </button>
+  </header>
+
+  <div class="interview-body">
+    <!-- Left: progress panel -->
+    <aside class="progress-panel">
+      <h2 class="progress-panel__title">{{ interviewTitle }}</h2>
+
+      <div class="progress-track">
+        <div class="progress-track__label">
+          <span>{{ currentQuestionIndex }} / {{ totalQuestions }}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" [style.width.%]="progressPercent"></div>
+        </div>
+      </div>
+
+      <ul class="stage-list">
+        <li
+          class="stage-item"
+          *ngFor="let stage of stages"
+          [class.stage-item--complete]="stage.status === 'complete'"
+          [class.stage-item--active]="stage.status === 'active'"
+        >
+          <span class="stage-item__marker">
+            <svg *ngIf="stage.status === 'complete'" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span *ngIf="stage.status !== 'complete'" class="stage-item__dot"></span>
+          </span>
+          <span class="stage-item__label">{{ stage.label }}</span>
+        </li>
+      </ul>
+
+      <div class="time-remaining">
+        <p class="time-remaining__label">Time Remaining</p>
+        <p class="time-remaining__value">{{ timeRemainingLabel }}</p>
+        <div class="progress-bar progress-bar--time">
+          <div class="progress-bar__fill progress-bar__fill--time" style="width: 68%"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center: question panel -->
+    <section class="question-panel">
+      <div class="bot-avatar">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="46" fill="var(--panel-alt)" />
+          <rect x="30" y="34" width="40" height="30" rx="10" fill="var(--accent)" />
+          <circle cx="41" cy="49" r="4" fill="#fff" />
+          <circle cx="59" cy="49" r="4" fill="#fff" />
+        </svg>
+      </div>
+
+      <p class="question-eyebrow">Here's your next question:</p>
+
+      <div class="question-card">
+        <p class="question-card__text">{{ currentQuestion }}</p>
+
+        <div class="question-card__footer">
+          <button class="listen-button" type="button" (click)="onListenAgain()">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M11 5 6 9H3v6h3l5 4V5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+              <path d="M15.5 9a4.5 4.5 0 0 1 0 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
+            Listen Again
+          </button>
+
+          <div class="waveform" aria-hidden="true">
+            <span *ngFor="let bar of [4, 8, 14, 10, 16, 7, 12, 5, 9, 13, 6]" [style.height.px]="bar"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: video panel -->
+    <aside class="video-panel">
+      <div class="video-frame">
+        <div class="video-frame__placeholder"></div>
+        <span class="recording-badge" *ngIf="isRecording">
+          <span class="recording-badge__dot"></span>
+          Recording... {{ recordingLabel }}
+        </span>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="control-bar">
+    <button class="control-button" type="button" (click)="onToggleMute()" [class.control-button--active]="isMuted">
+      <svg viewBox="0 0 24 24" fill="none">
+        <rect x="9.5" y="3.5" width="5" height="9.5" rx="2.5" stroke="currentColor" stroke-width="1.7" />
+        <path d="M6.5 12a5.5 5.5 0 0 0 11 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+        <path d="M12 17.5V20.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+      </svg>
+      Mute
+    </button>
+
+    <button class="control-button" type="button" (click)="onToggleVideo()" [class.control-button--active]="!isVideoOn">
+      <svg viewBox="0 0 24 24" fill="none">
+        <rect x="3.5" y="7" width="12" height="10" rx="2.5" stroke="currentColor" stroke-width="1.7" />
+        <path d="M15.5 10.5l5-2.7v8.4l-5-2.7" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+      </svg>
+      Stop Video
+    </button>
+
+    <button class="control-button control-button--danger" type="button" (click)="onEndAnswer()">
+      <svg viewBox="0 0 24 24" fill="none">
+        <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" />
+      </svg>
+      End Answer
+    </button>
+  </footer>
+</div>

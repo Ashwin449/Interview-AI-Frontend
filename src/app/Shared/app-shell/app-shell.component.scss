@@ -1,0 +1,156 @@
+/*
+  Fonts: add to index.html <head>, or swap for faces you already license:
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  These custom properties are set once here and inherit down through
+  <router-outlet> into every child page — do not redefine them per page.
+*/
+
+:host {
+  --ink: #1b2030;
+  --paper: #f6f3ec;
+  --surface: #ffffff;
+  --amber: #c98a3b;
+  --amber-dark: #a86f2b;
+  --teal: #2f6f62;
+  --line: #e4dfd3;
+  --muted: #6b6558;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  display: block;
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background: var(--paper);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  min-height: 100vh;
+}
+
+.page {
+  min-width: 0;
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand__mark {
+  width: 30px;
+  height: 30px;
+  color: var(--amber);
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.brand__name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.brand__tagline {
+  font-size: 11.5px;
+  color: rgba(246, 243, 236, 0.55);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: rgba(246, 243, 236, 0.65);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+
+  &:hover {
+    color: var(--paper);
+  }
+
+  &--active {
+    color: var(--paper);
+    background: rgba(201, 138, 59, 0.14);
+    border-left-color: var(--amber);
+  }
+}
+
+.nav__icon {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.sidebar__note {
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid rgba(246, 243, 236, 0.12);
+
+  p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 14px;
+    color: rgba(246, 243, 236, 0.75);
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+}
