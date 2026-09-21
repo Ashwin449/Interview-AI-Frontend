@@ -1,9 +1,13 @@
 <main class="main">
+  <!-- Top bar -->
   <header class="topbar">
-    <div class="topbar__greeting">
-      <h1>Welcome back, {{ firstName }} <span class="wave">👋</span></h1>
-      <p>Let's get you interview-ready.</p>
-    </div>
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
+        <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+      <input type="text" placeholder="Search candidates, interviews, or jobs..." />
+    </label>
 
     <div class="topbar__actions">
       <button class="icon-button" type="button" aria-label="Notifications">
@@ -16,7 +20,10 @@
 
       <button class="profile-pill" type="button">
         <span class="profile-pill__avatar">A</span>
-        <span class="profile-pill__name">{{ userName }}</span>
+        <span class="profile-pill__text">
+          <span class="profile-pill__name">{{ userName }}</span>
+          <span class="profile-pill__role">{{ userRole }}</span>
+        </span>
         <svg viewBox="0 0 24 24" fill="none" class="profile-pill__chevron">
           <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
@@ -24,108 +31,215 @@
     </div>
   </header>
 
+  <!-- Greeting + quote -->
+  <section class="greeting-row">
+    <div class="greeting">
+      <h1>Good morning, {{ firstName }}! <span class="wave">👋</span></h1>
+      <p>Here's what's happening with your AI interview platform today.</p>
+    </div>
+
+    <div class="quote-card">
+      <p class="quote-card__text">"Hire with confidence.<br />Let AI help you find the right talent."</p>
+      <div class="quote-card__illustration" aria-hidden="true">
+        <svg viewBox="0 0 120 100" fill="none">
+          <rect x="10" y="60" width="46" height="8" rx="4" fill="var(--accent)" opacity="0.12" />
+          <circle cx="82" cy="34" r="16" fill="var(--accent-soft)" />
+          <rect x="66" y="46" width="32" height="34" rx="10" fill="var(--accent)" />
+          <rect x="46" y="66" width="30" height="18" rx="4" fill="#fff" stroke="var(--border)" stroke-width="1.2" />
+          <circle cx="98" cy="26" r="11" fill="#fff" stroke="var(--accent)" stroke-width="1.4" />
+          <text x="98" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="var(--accent)">AI</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
   <!-- Stats -->
   <section class="stats">
-    <div class="stat-card" *ngFor="let stat of stats" [class]="'stat-card--' + stat.tone">
-      <div class="stat-card__icon">
-        <svg *ngIf="stat.icon === 'briefcase'" viewBox="0 0 24 24" fill="none">
-          <rect x="4" y="8" width="16" height="10.5" rx="2" stroke="currentColor" stroke-width="1.6" />
-          <path d="M9 8V6.5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2V8" stroke="currentColor" stroke-width="1.6" />
+    <div class="stat-card" *ngFor="let stat of stats">
+      <div class="stat-card__icon" [class]="'stat-card__icon--' + stat.tone">
+        <svg *ngIf="stat.icon === 'interviews'" viewBox="0 0 24 24" fill="none">
+          <rect x="4" y="6.5" width="16" height="12" rx="3" stroke="currentColor" stroke-width="1.7" />
+          <path d="M8 6.5V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1.5" stroke="currentColor" stroke-width="1.7" />
         </svg>
-        <svg *ngIf="stat.icon === 'trending'" viewBox="0 0 24 24" fill="none">
-          <path d="M4 16l5-5 4 4 7-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M15 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        <svg *ngIf="stat.icon === 'completed'" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7" />
+          <path d="M8.3 12.3l2.4 2.4 5-5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <svg *ngIf="stat.icon === 'star'" viewBox="0 0 24 24" fill="none">
-          <path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        <svg *ngIf="stat.icon === 'progress'" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7" />
+          <path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <svg *ngIf="stat.icon === 'clock'" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6" />
-          <path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+        <svg *ngIf="stat.icon === 'score'" viewBox="0 0 24 24" fill="none">
+          <path d="M4 16l5-5 4 4 7-8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M15 7h5v5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
       <div class="stat-card__value">{{ stat.value }}</div>
       <div class="stat-card__label">{{ stat.label }}</div>
+      <div class="stat-card__delta">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 15l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        {{ stat.delta }}
+      </div>
     </div>
   </section>
 
-  <!-- Content grid -->
-  <section class="content-grid">
-    <div class="hero-card">
-      <span class="hero-card__badge">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M12 3.5l1.6 3.9 4.1.5-3.1 2.9.8 4.2-3.4-2.1-3.4 2.1.8-4.2-3.1-2.9 4.1-.5L12 3.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
-        </svg>
-        AI-powered practice
-      </span>
-
-      <h2 class="hero-card__title">
-        Practice interviews.<br />
-        Build confidence.<br />
-        Land your dream job.
-      </h2>
-
-      <p class="hero-card__body">
-        Get personalized, AI-driven interview questions based on your resume and target role.
-      </p>
-
-      <div class="hero-card__actions">
-        <button class="btn btn--primary" type="button" (click)="onStartNewInterview()">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor" />
-          </svg>
-          Start new interview
-        </button>
-        <button class="btn btn--secondary" type="button" (click)="onUploadResume()">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 15.5V4.5M12 4.5 8 8.5M12 4.5l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M5 15.5v3a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          Update resume
+  <!-- Activity + upcoming -->
+  <section class="mid-grid">
+    <div class="panel-card chart-card">
+      <div class="panel-card__header">
+        <div>
+          <h3>Interview Activity</h3>
+          <p class="panel-card__subtitle">Interviews conducted over the last 7 days</p>
+        </div>
+        <button class="range-select" type="button">
+          Last 7 days
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
         </button>
       </div>
 
-      <svg class="hero-card__illustration" viewBox="0 0 160 160" fill="none" aria-hidden="true">
-        <circle cx="80" cy="80" r="58" stroke="rgba(255,255,255,0.14)" stroke-width="1" />
-        <circle cx="80" cy="80" r="40" stroke="rgba(255,255,255,0.18)" stroke-width="1" />
-        <rect x="70" y="52" width="20" height="38" rx="10" stroke="#e8a531" stroke-width="2" />
-        <path d="M58 78a22 22 0 0 0 44 0" stroke="#e8a531" stroke-width="2" stroke-linecap="round" />
-        <path d="M80 100v14" stroke="#e8a531" stroke-width="2" stroke-linecap="round" />
-        <path d="M68 114h24" stroke="#e8a531" stroke-width="2" stroke-linecap="round" />
-      </svg>
+      <div class="bar-chart">
+        <div class="bar-chart__bar" *ngFor="let point of chartData">
+          <div class="bar-chart__track">
+            <div class="bar-chart__fill" [style.height.%]="(point.value / chartMax) * 100"></div>
+          </div>
+          <span class="bar-chart__label">{{ point.day }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-card__header">
+        <h3>Upcoming Interviews</h3>
+        <button class="link-button" type="button">View All</button>
+      </div>
+
+      <ul class="upcoming-list">
+        <li class="upcoming-item" *ngFor="let item of upcomingInterviews">
+          <span class="upcoming-item__time">{{ item.time }}<br /><small>Today</small></span>
+          <span class="upcoming-item__avatar" [class]="'upcoming-item__avatar--' + item.tone">{{ item.initials }}</span>
+          <span class="upcoming-item__text">
+            <span class="upcoming-item__name">{{ item.candidate }}</span>
+            <span class="upcoming-item__role">{{ item.role }}</span>
+          </span>
+          <button
+            class="upcoming-item__action"
+            [class.upcoming-item__action--primary]="item.isNext"
+            type="button"
+            (click)="onStartInterview(item)"
+          >
+            {{ item.isNext ? 'Start' : 'View' }}
+          </button>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Table + quick actions -->
+  <section class="bottom-grid">
+    <div class="panel-card">
+      <div class="panel-card__header">
+        <h3>Recent Interviews</h3>
+        <button class="link-button" type="button">View All</button>
+      </div>
+
+      <table class="interview-table">
+        <thead>
+          <tr>
+            <th>Candidate</th>
+            <th>Role</th>
+            <th>Date</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of recentInterviews">
+            <td>
+              <span class="table-candidate">
+                <span class="table-candidate__avatar" [class]="'table-candidate__avatar--' + row.tone">{{ row.initials }}</span>
+                {{ row.candidate }}
+              </span>
+            </td>
+            <td class="muted">{{ row.role }}</td>
+            <td class="muted">{{ row.date }}</td>
+            <td class="muted">{{ row.score || '—' }}</td>
+            <td>
+              <span
+                class="status-pill"
+                [class.status-pill--complete]="row.status === 'Completed'"
+                [class.status-pill--progress]="row.status === 'In Progress'"
+              >
+                {{ row.status }}
+              </span>
+            </td>
+            <td>
+              <button class="link-button" type="button" (click)="onViewInterview(row)">View</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="side-column">
       <div class="panel-card">
         <div class="panel-card__header">
-          <h3>Your skills</h3>
-          <button class="link-button" type="button" (click)="onEditSkills()">Edit</button>
+          <h3>Quick Actions</h3>
         </div>
-        <div class="skill-tags">
-          <span class="skill-tag" *ngFor="let skill of skills">{{ skill.name }}</span>
-        </div>
-      </div>
 
-      <div class="panel-card">
-        <div class="panel-card__header">
-          <h3>Recent activity</h3>
-          <button class="link-button" type="button">View all</button>
-        </div>
-        <ul class="activity-list">
-          <li class="activity-item" *ngFor="let activity of recentActivity">
-            <span class="activity-item__icon" [ngSwitch]="activity.icon">
-              <svg *ngSwitchDefault viewBox="0 0 24 24" fill="none">
-                <path d="M8.5 12.3l2.3 2.3 4.7-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" />
+        <div class="quick-actions">
+          <button
+            class="quick-action"
+            type="button"
+            *ngFor="let action of quickActions"
+            (click)="onQuickAction(action)"
+          >
+            <span class="quick-action__icon" [class]="'quick-action__icon--' + action.tone">
+              <svg *ngIf="action.icon === 'schedule'" viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="5.5" width="16" height="14" rx="3" stroke="currentColor" stroke-width="1.7" />
+                <path d="M8 4v3M16 4v3M4 10h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+              </svg>
+              <svg *ngIf="action.icon === 'candidate'" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="8.5" r="3.2" stroke="currentColor" stroke-width="1.7" />
+                <path d="M5.5 20a6.5 6.5 0 0 1 13 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                <path d="M17 6.5l2 2 3.2-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <svg *ngIf="action.icon === 'resume'" viewBox="0 0 24 24" fill="none">
+                <path d="M7 3.5h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                <path d="M9 12.5h6M9 16h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+              </svg>
+              <svg *ngIf="action.icon === 'job'" viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="8" width="16" height="10.5" rx="2" stroke="currentColor" stroke-width="1.7" />
+                <path d="M9 8V6.5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2V8" stroke="currentColor" stroke-width="1.7" />
               </svg>
             </span>
-            <span class="activity-item__text">
-              <span class="activity-item__title">{{ activity.title }}</span>
-              <span class="activity-item__score">Scored {{ activity.score }}%</span>
+            <span class="quick-action__text">
+              <span class="quick-action__title">{{ action.title }}</span>
+              <span class="quick-action__desc">{{ action.description }}</span>
             </span>
-            <span class="activity-item__time">{{ activity.timeAgo }}</span>
-          </li>
-        </ul>
+            <svg class="quick-action__chevron" viewBox="0 0 24 24" fill="none">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        <button class="assistant-banner" type="button" (click)="onOpenAssistant()">
+          <span class="assistant-banner__icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6" />
+              <circle cx="9" cy="11" r="1.1" fill="currentColor" />
+              <circle cx="15" cy="11" r="1.1" fill="currentColor" />
+              <path d="M8.5 15c1.9 1.4 5.1 1.4 7 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="assistant-banner__text">
+            <span class="assistant-banner__title">AI Interview Assistant</span>
+            <span class="assistant-banner__desc">Generate questions, evaluate answers, and get AI-powered insights.</span>
+          </span>
+          <svg class="quick-action__chevron" viewBox="0 0 24 24" fill="none">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
       </div>
     </div>
   </section>

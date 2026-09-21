@@ -1,0 +1,177 @@
+<main class="main">
+  <!-- Top bar -->
+  <header class="topbar">
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
+        <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+      <input type="text" placeholder="Search candidates, interviews, or jobs..." />
+    </label>
+
+    <div class="topbar__actions">
+      <button class="icon-button" type="button" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M6 9.5a6 6 0 0 1 12 0c0 3.5 1 5 1.5 5.5H4.5C5 14.5 6 13 6 9.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+          <path d="M10 18.5a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+        <span class="icon-button__dot"></span>
+      </button>
+
+      <button class="profile-pill" type="button">
+        <span class="profile-pill__avatar">A</span>
+        <span class="profile-pill__text">
+          <span class="profile-pill__name">{{ userName }}</span>
+          <span class="profile-pill__role">{{ userRole }}</span>
+        </span>
+        <svg viewBox="0 0 24 24" fill="none" class="profile-pill__chevron">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div>
+      <h1>Reports</h1>
+      <p>Get insights into interview performance and hiring analytics.</p>
+    </div>
+    <div class="page-header__actions">
+      <button class="range-select" type="button">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5.5" width="16" height="14" rx="3" stroke="currentColor" stroke-width="1.6" /><path d="M8 4v3M16 4v3M4 10h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+        {{ dateRange }}
+      </button>
+      <button class="btn btn--primary" type="button" (click)="onExport()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 4v11M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /><path d="M5 19h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+        Export
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="stat-card" *ngFor="let stat of stats">
+      <div class="stat-card__icon" [class]="'stat-card__icon--' + stat.tone">
+        <svg *ngIf="stat.icon === 'briefcase'" viewBox="0 0 24 24" fill="none">
+          <rect x="4" y="8" width="16" height="10.5" rx="2" stroke="currentColor" stroke-width="1.7" />
+          <path d="M9 8V6.5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2V8" stroke="currentColor" stroke-width="1.7" />
+        </svg>
+        <svg *ngIf="stat.icon === 'completed'" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7" />
+          <path d="M8.3 12.3l2.4 2.4 5-5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <svg *ngIf="stat.icon === 'score'" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+        <svg *ngIf="stat.icon === 'hired'" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="8.5" r="3.2" stroke="currentColor" stroke-width="1.7" />
+          <path d="M5.5 20a6.5 6.5 0 0 1 13 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+          <path d="M17 5.5l1.6 1.6L21.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="stat-card__value">{{ stat.value }}</div>
+      <div class="stat-card__label">{{ stat.label }}</div>
+    </div>
+  </section>
+
+  <!-- Charts -->
+  <section class="mid-grid">
+    <div class="panel-card">
+      <div class="panel-card__header">
+        <h3>Interview Performance</h3>
+        <button class="range-select range-select--ghost" type="button">
+          This Month
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+      </div>
+
+      <svg class="line-chart" viewBox="0 0 360 140" preserveAspectRatio="none">
+        <line *ngFor="let row of [0, 1, 2, 3]" x1="0" [attr.x2]="360" [attr.y1]="row * 35" [attr.y2]="row * 35" class="line-chart__grid" />
+        <polyline class="line-chart__line line-chart__line--interviews" [attr.points]="interviewsLinePoints" fill="none" />
+        <polyline class="line-chart__line line-chart__line--score" [attr.points]="scoreLinePoints" fill="none" />
+      </svg>
+      <div class="line-chart__labels">
+        <span *ngFor="let point of weeklyPerformance">{{ point.label }}</span>
+      </div>
+
+      <div class="chart-legend">
+        <span class="chart-legend__item"><i class="chart-legend__dot chart-legend__dot--interviews"></i>Interviews</span>
+        <span class="chart-legend__item"><i class="chart-legend__dot chart-legend__dot--score"></i>Average Score (%)</span>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-card__header">
+        <h3>Candidate Status</h3>
+      </div>
+
+      <div class="donut-wrap">
+        <svg class="donut-chart" viewBox="0 0 100 100">
+          <circle
+            *ngFor="let segment of donutSegments"
+            cx="50"
+            cy="50"
+            r="40"
+            fill="none"
+            stroke-width="14"
+            [attr.stroke-dasharray]="segment.dashArray"
+            [attr.stroke-dashoffset]="segment.dashOffset"
+            [class]="'donut-chart__segment donut-chart__segment--' + segment.tone"
+          />
+        </svg>
+        <div class="donut-wrap__center">
+          <span class="donut-wrap__value">{{ totalCandidates }}</span>
+          <span class="donut-wrap__label">Total</span>
+        </div>
+      </div>
+
+      <ul class="donut-legend">
+        <li *ngFor="let slice of statusSlices">
+          <i class="donut-legend__dot" [class]="'donut-legend__dot--' + slice.tone"></i>
+          {{ slice.label }}
+          <span class="donut-legend__percent">{{ slice.percent }}%</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Skills + feedback -->
+  <section class="bottom-grid">
+    <div class="panel-card">
+      <div class="panel-card__header">
+        <h3>Top Skills from Interviews</h3>
+      </div>
+
+      <ul class="skill-bars">
+        <li class="skill-bar" *ngFor="let skill of topSkills">
+          <div class="skill-bar__head">
+            <span>{{ skill.name }}</span>
+            <span>{{ skill.percent }}%</span>
+          </div>
+          <div class="skill-bar__track">
+            <div class="skill-bar__fill" [style.width.%]="skill.percent"></div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-card__header">
+        <h3>Interview Feedback</h3>
+      </div>
+
+      <ul class="feedback-list">
+        <li class="feedback-item" *ngFor="let item of feedback">
+          <span class="feedback-item__avatar" [class]="'feedback-item__avatar--' + item.tone">{{ item.initials }}</span>
+          <span class="feedback-item__body">
+            <span class="feedback-item__head">
+              <span class="feedback-item__name">{{ item.name }}</span>
+              <span class="feedback-item__date">{{ item.date }}</span>
+            </span>
+            <span class="feedback-item__quote">&ldquo;{{ item.quote }}&rdquo;</span>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>

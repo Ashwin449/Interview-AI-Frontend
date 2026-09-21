@@ -1,47 +1,149 @@
 <main class="main">
-  <header class="masthead">
-    <div>
-      <h1>Resume</h1>
-      <p>This is what IntervueAI reads before every practice session.</p>
+  <!-- Top bar -->
+  <header class="topbar">
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
+        <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+      <input type="text" placeholder="Search candidates, interviews, or jobs..." />
+    </label>
+
+    <div class="topbar__actions">
+      <button class="icon-button" type="button" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M6 9.5a6 6 0 0 1 12 0c0 3.5 1 5 1.5 5.5H4.5C5 14.5 6 13 6 9.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+          <path d="M10 18.5a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+        <span class="icon-button__dot"></span>
+      </button>
+
+      <button class="profile-pill" type="button">
+        <span class="profile-pill__avatar">A</span>
+        <span class="profile-pill__text">
+          <span class="profile-pill__name">{{ userName }}</span>
+          <span class="profile-pill__role">{{ userRole }}</span>
+        </span>
+        <svg viewBox="0 0 24 24" fill="none" class="profile-pill__chevron">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
     </div>
   </header>
 
-  <section class="content-grid" *ngIf="hasResume; else emptyState">
-    <div class="file-card">
-      <div class="file-card__icon">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M7 3.5h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
-          <path d="M9 12.5h6M9 16h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-        </svg>
-      </div>
-      <div class="file-card__info">
-        <span class="file-card__name">{{ fileName }}</span>
-        <span class="file-card__meta">{{ uploadedOn }}</span>
-      </div>
-      <div class="file-card__actions">
-        <button class="btn btn--outline" type="button" (click)="onUploadNew()">Replace</button>
-        <button class="text-button text-button--danger" type="button" (click)="onRemove()">Remove</button>
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <span>Home</span>
+    <span class="breadcrumb__sep">/</span>
+    <span>Resumes</span>
+    <span class="breadcrumb__sep">/</span>
+    <span class="breadcrumb__current">Upload</span>
+  </nav>
+
+  <div class="page-header">
+    <h1>Upload Resume</h1>
+    <p>Upload a candidate's resume to extract experience and generate an interview blueprint.</p>
+  </div>
+
+  <section class="upload-grid">
+    <div class="panel-card dropzone-card">
+      <div
+        class="dropzone"
+        [class.dropzone--active]="isDragging"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave()"
+        (drop)="onDrop($event)"
+      >
+        <div class="dropzone__icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 15.5V4.5M12 4.5 8 8.5M12 4.5l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M5 15.5v3a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <p class="dropzone__title">Drag and drop your resume here</p>
+        <p class="dropzone__subtitle">or click to browse</p>
+        <button class="btn btn--primary" type="button" (click)="onChooseFile()">Choose File</button>
+        <p class="dropzone__hint">Supports PDF, DOC, DOCX (Max 10 MB)</p>
       </div>
     </div>
 
-    <div class="panel">
-      <div class="panel__header">
-        <h3>What we picked up</h3>
+    <div class="panel-card analysis-card">
+      <div class="panel-card__header">
+        <h3>AI Resume Analysis</h3>
       </div>
-      <div class="skill-pills">
-        <span class="skill-pill" *ngFor="let skill of extractedSkills">{{ skill.name }}</span>
-      </div>
-      <p class="panel__footnote">
-        These skills shape the questions in your practice interviews. Update your resume any time to refine them.
-      </p>
+      <p class="analysis-card__intro">Our AI will automatically extract:</p>
+
+      <ul class="analysis-list">
+        <li class="analysis-item" *ngFor="let point of analysisPoints">
+          <span class="analysis-item__icon" [class]="'analysis-item__icon--' + point.tone">
+            <svg *ngIf="point.icon === 'user'" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="8.5" r="3.2" stroke="currentColor" stroke-width="1.7" />
+              <path d="M5.5 20a6.5 6.5 0 0 1 13 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+            </svg>
+            <svg *ngIf="point.icon === 'skills'" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+            <svg *ngIf="point.icon === 'experience'" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="8" width="16" height="10.5" rx="2" stroke="currentColor" stroke-width="1.7" />
+              <path d="M9 8V6.5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2V8" stroke="currentColor" stroke-width="1.7" />
+            </svg>
+            <svg *ngIf="point.icon === 'education'" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5 2.5 9.5 12 14l9.5-4.5L12 5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+              <path d="M6.5 12v4.5c0 1.4 2.5 2.5 5.5 2.5s5.5-1.1 5.5-2.5V12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
+            <svg *ngIf="point.icon === 'blueprint'" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.6" />
+              <path d="M8 9h8M8 13h8M8 17h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="analysis-item__text">
+            <span class="analysis-item__title">{{ point.title }}</span>
+            <span class="analysis-item__desc">{{ point.description }}</span>
+          </span>
+        </li>
+      </ul>
     </div>
   </section>
 
-  <ng-template #emptyState>
-    <div class="empty-state">
-      <p class="empty-state__title">No resume on file yet</p>
-      <p class="empty-state__body">Upload one so your practice questions match your actual experience.</p>
-      <button class="btn btn--primary" type="button" (click)="onUploadNew()">Upload resume</button>
+  <section class="panel-card">
+    <div class="panel-card__header">
+      <h3>Recently Uploaded Resumes</h3>
+      <button class="link-button" type="button">View All</button>
     </div>
-  </ng-template>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Candidate</th>
+          <th>File</th>
+          <th>Uploaded On</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of recentResumes">
+          <td>
+            <span class="table-candidate">
+              <span class="table-candidate__avatar" [class]="'table-candidate__avatar--' + row.tone">{{ row.initials }}</span>
+              {{ row.candidate }}
+            </span>
+          </td>
+          <td class="muted">{{ row.fileName }}</td>
+          <td class="muted">{{ row.uploadedOn }}</td>
+          <td>
+            <span
+              class="status-pill"
+              [class.status-pill--complete]="row.status === 'Analyzed'"
+              [class.status-pill--progress]="row.status === 'Processing'"
+            >
+              {{ row.status }}
+            </span>
+          </td>
+          <td>
+            <button class="link-button" type="button" (click)="onViewResume(row)">View</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 </main>
