@@ -1,1 +1,53 @@
 /* You can add global styles to this file, and also import other style files */
+/* ------------------------------------------------------------------ */
+/* Global reset — put this in src/styles.scss (root, not a component)  */
+/* ------------------------------------------------------------------ */
+
+* ,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: #f3f3ef; /* matches --paper token used across components */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove Angular's default router host element from affecting layout */
+router-outlet {
+  display: contents;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  background: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
