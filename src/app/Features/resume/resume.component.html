@@ -61,8 +61,18 @@
         </div>
         <p class="dropzone__title">Drag and drop your resume here</p>
         <p class="dropzone__subtitle">or click to browse</p>
-        <button class="btn btn--primary" type="button" (click)="onChooseFile()">Choose File</button>
+        <button class="btn btn--primary" type="button" (click)="onChooseFile()" [disabled]="isUploading">
+          {{ isUploading ? 'Uploading…' : 'Choose File' }}
+        </button>
         <p class="dropzone__hint">Supports PDF, DOC, DOCX (Max 10 MB)</p>
+        <p class="dropzone__error" *ngIf="uploadError" role="alert">{{ uploadError }}</p>
+        <input
+          #fileInput
+          type="file"
+          accept=".pdf,.doc,.docx"
+          style="display: none"
+          (change)="onFileSelected($event)"
+        />
       </div>
     </div>
 
@@ -110,6 +120,8 @@
       <button class="link-button" type="button">View All</button>
     </div>
 
+    <p class="load-error" *ngIf="loadError" role="alert">{{ loadError }}</p>
+
     <table class="data-table">
       <thead>
         <tr>
@@ -142,6 +154,9 @@
           <td>
             <button class="link-button" type="button" (click)="onViewResume(row)">View</button>
           </td>
+        </tr>
+        <tr *ngIf="!isLoadingResumes && !recentResumes.length">
+          <td colspan="5" class="empty-state">No resumes uploaded yet.</td>
         </tr>
       </tbody>
     </table>

@@ -14,12 +14,24 @@ import {
 const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 
+
+export interface CurrentUser {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string | null;
+  is_active: boolean;
+  is_verified: boolean;
+  roles: string[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private readonly baseUrl = `${environment.apiUrl}/api/auth`;
+  private readonly baseUrl = `${environment.apiUrl}/auth`;
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.isTokenValid());
   readonly isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
@@ -90,4 +102,10 @@ export class AuthService {
       'Something went wrong. Please try again.';
     return throwError(() => new Error(message));
   }
+
+
+  getMe(): Observable<CurrentUser> {
+  return this.http.get<CurrentUser>(`${this.baseUrl}/me`);
+}
+
 }

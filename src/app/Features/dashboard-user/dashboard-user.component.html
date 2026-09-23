@@ -19,7 +19,7 @@
       </button>
 
       <button class="profile-pill" type="button">
-        <span class="profile-pill__avatar">A</span>
+        <span class="profile-pill__avatar">{{ userInitials }}</span>
         <span class="profile-pill__text">
           <span class="profile-pill__name">{{ userName }}</span>
           <span class="profile-pill__role">{{ userRole }}</span>
@@ -76,12 +76,14 @@
       </div>
       <div class="stat-card__value">{{ stat.value }}</div>
       <div class="stat-card__label">{{ stat.label }}</div>
-      <div class="stat-card__delta">
+      <div class="stat-card__delta" *ngIf="stat.delta">
         <svg viewBox="0 0 24 24" fill="none"><path d="M6 15l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
         {{ stat.delta }}
       </div>
     </div>
   </section>
+
+  <p class="load-error" *ngIf="loadError" role="alert">{{ loadError }}</p>
 
   <!-- Activity + upcoming -->
   <section class="mid-grid">
@@ -104,6 +106,7 @@
           </div>
           <span class="bar-chart__label">{{ point.day }}</span>
         </div>
+        <p class="empty-state" *ngIf="!isLoading && !chartData.length">No interview activity yet.</p>
       </div>
     </div>
 
@@ -130,6 +133,7 @@
             {{ item.isNext ? 'Start' : 'View' }}
           </button>
         </li>
+        <li class="empty-state" *ngIf="!isLoading && !upcomingInterviews.length">No upcoming interviews scheduled.</li>
       </ul>
     </div>
   </section>
@@ -176,6 +180,9 @@
             <td>
               <button class="link-button" type="button" (click)="onViewInterview(row)">View</button>
             </td>
+          </tr>
+          <tr *ngIf="!isLoading && !recentInterviews.length">
+            <td colspan="6" class="empty-state">No interviews yet.</td>
           </tr>
         </tbody>
       </table>

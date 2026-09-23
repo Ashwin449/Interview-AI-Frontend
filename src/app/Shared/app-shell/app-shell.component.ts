@@ -20,7 +20,7 @@ export class AppShellComponent {
     { label: 'Dashboard', route: '/dashboard', icon: 'home' },
     { label: 'Interviews', route: '/interviews', icon: 'mic' },
     { label: 'Candidates', route: '/candidates', icon: 'users' },
-    { label: 'Resumes', route: '/resumes', icon: 'file' },
+    { label: 'Resumes', route: '/resume', icon: 'file' },
     { label: 'Jobs', route: '/jobs', icon: 'briefcase' },
     { label: 'Assessments', route: '/assessments', icon: 'check-circle' },
     { label: 'Users', route: '/users', icon: 'user' },
